@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Status</title>
+  <link rel="stylesheet" type="text/css" href="static/css/style_forIndex.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_formenu.css') }}">
+</head>
+<body>
+  <nav style="font-family: Arial;">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/new">New</a></li>
+              <li><a href="/status">Status</a></li>
+              <li><a href="/reset">Reset</a></li>
+              <li><a href="/view">View</a></li>
+              <li><a href="/read">Read</a></li>
+            </ul>
+        </nav>
+<br> <br> <br> <br><br> <br>
+<h1 align = "center" >{{ data }}</h1><h1 align = "center">{{ liste }}</h1>
+</body>
+</html>

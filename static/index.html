@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>PhyML Formulaire</title>
+
+  <link rel="stylesheet" type="text/css" href="static/css/style_forIndex.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_formenu.css') }}">
+  <script defer src="static/js/validation.js"></script>
+  <script defer src="static/js/utils.js"></script>
+
+
+</head>
+<body onload="DoLoad()">
+  <header>
+        <nav>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/new">New</a></li>
+              <li><a href="/status">Status</a></li>
+              <li><a href="/reset">Reset</a></li>
+              <li><a href="/view">View</a></li>
+              <li><a href="/read">Read</a></li>
+            </ul>
+        </nav>
+    </header>
+ <div id="page">
+   <h4>PhyML online execution</h4>
+</div>
+<form method="post" action="/run" enctype="multipart/form-data" name="options">
+<input type="hidden" name="MAX_FILE_SIZE" value="33554432" />
+<input type="hidden" name="ServerLoad" value="11" />
+
+ <table>
+     <tr>
+      <td>Sequences(PHYLIP format)</td>
+      <td>
+       <input  name="file" type="file" size="15" />
+       <td width="20%">
+       File <input type="radio" name="DataOption"  value="file" onclick="inputFileChanged()" checked="checked" />
+     </td>
+     <td width="20%">
+       <input type="radio" name="DataOption" value="textarea" onclick="inputFileChanged()" /> Copy / Paste
+   </tr>
+   <tr>
+     <td > Please copy and paste the text of input file (Phylip format)</td>
+     <td colspan = "3" ><textarea name = "input" rows="4" cols="110"> </textarea></td>
+   <tr>
+    <td >Data Type</td>
+    <td colspan="3">
+     DNA<input type="radio" name="SequenceTypeOption" value="nt" onclick="sequenceTypeChanged()" checked="checked" />
+     <input type="radio" name="SequenceTypeOption" value="aa" onclick="sequenceTypeChanged()" />Amino-Acids
+    </td>
+   </tr>
+   <tr>
+    <td colspan="2">Sequence file </td>
+    <td>
+     interleaved<input type="radio" name="sequential" value="n" checked="checked" /></td>
+     <td><input type="radio" name="sequential" value="y" />sequential
+    </td>
+   </tr>
+   <tr>
+    <td >Number of data set</td>
+    <td>
+      <input name="NbDataSets" size="30" maxlength="15" value="" min="1" max="100" placeholder="Entre 1 et 100" />
+    </td>
+    <td>
+     yes<input type="radio" name="multiple" onclick="dataSetChange()" value="y" a/></td>
+     <td><input type="radio" name="multiple" onclick="dataSetChange()" value="n" checked="checked" />no
+    </td>
+   </tr>
+     <tr>
+      <td colspan="2">Minimum parsimony starting tree [Bionj] (for tree topology modifications)</td>
+      <td >
+       yes<input type="radio" name="pars" onclick="startingTreeChanged()" value="y" /></td>
+       <td><input type="radio" name="pars" onclick="startingTreeChanged()" value="n" checked="checked" />no
+      </td>
+   </tr>
+ 	  <tr>
+ 	   <td width="30%">Substitution model</td>
+ 	   <td colspan="3">
+ 		<select name="model" onchange="modelChanged()" checked ="checked"><option /></select>
+ 	   </td>
+ 	  </tr>
+ 	  <tr>  <!-- Frequencies -->
+ 	   <td>Equilibrium frequencies</td>
+ 	   <td >
+    <span id="Fq_no"></span><input type="radio" name="FqOption" value="n" checked="checked" />
+ 		 <input type="radio" name="FqOption" value="m" /><span id="Fq_left"></span>
+    </td>
+    <td colspan="2">
+    <span id="Fq_center" style="visibility:hidden;"></span><input type="radio" name="FqOption" value="0.25, 0.25, 0.25, 0.25" id="Fq_" style="visibility:hidden"/>
+ 		<input type="radio" name="FqOption" value="e" /><span id="Fq_right"></span>
+    </td>
+ 	  </tr>
+ 	  <tr>  <!-- Ts/Tv-->
+ 	   <td>Transition / transversion ratio <br />(DNA models)</td>
+ 	   <td><input name="Kappa" size="30" maxlength="15" min="0" max="100" placeholder="Entre un entier positif" /></td>
+ 	   <td align="right">
+ 		fixed<input type="radio" name="tstv" onclick="tstvChanged()" value="" />
+ 	   </td>
+ 	   <td width="20%">
+ 		<input type="radio" name="tstv" onclick="tstvChanged()" value="e" checked="checked" />estimated
+ 	   </td>
+ 	  </tr>
+ 	  <tr>  <!-- Invar -->
+ 	   <td>Proportion of invariable sites</td>
+ 	   <td><input name="Invar" value= "0.0" size="30" maxlength="15" min="0.0" max="1.0" placeholder="Entre 0.0 et 1.0" /></td>
+ 	   <td align="right">
+ 		fixed<input type="radio" name="pinv" value="" onclick="pinvChanged()" />
+ 	   </td>
+ 	   <td>
+ 		<input type="radio" name="pinv" value="e" onclick="pinvChanged()" checked="checked" />estimated
+ 	   </td>
+ 	  </tr>
+ 	  <tr><!-- G cat -->
+ 	   <td>Number of substitution rate categories</td>
+ 	   <td ><input name="nclasses" value="4" size="15" maxlength="15" /></td>
+     <td>
+      yes<input type="radio" name="nclassesOption" onclick="nclassesChanged()" value="y" a/></td>
+      <td><input type="radio" name="nclassesOption" onclick="nclassesChanged()" value="n" checked="checked" />no
+     </td>
+ 	  </tr>
+ 	  <tr><!-- G val -->
+ 	   <td>Gamma shape parameter</td>
+ 	   <td><input name="Gamma" size="15" maxlength="15" /></td>
+ 	   <td align="right">
+ 		fixed<input type="radio" name="alpha" onclick="alphaChanged()" value="" />
+ 	   </td>
+ 	   <td>
+ 		<input type="radio" name="alpha" onclick="alphaChanged()" value="e" checked="checked" />estimated
+ 	   </td>
+ 	  </tr>
+    <!-- Tree searching -->
+   <tr>
+   <td colspan="2">Middle of each rate class</td>
+   <td align="right">
+  yes<input type="radio" name="useMedian" onclick="useMedianChanged()" value="use_median" />
+   </td>
+   <td>
+  <input type="radio" name="useMedian" onclick="useMedianChanged()" value="n" checked="checked" />no
+   </td>
+  </tr>
+  <tr>
+   <td>Coding position (when analysing alignment)</td>
+   <td><select name="codpos"><option /></select></td>
+   <td align="right">
+    yes<input type="radio" name="codposOption" onclick="codposOptionChanged()" value="y" />
+   </td>
+   <td>
+    <input type="radio" name="codposOption" onclick="codposOptionChanged()" value="n" checked="checked" />no
+   </td>
+ </tr>
+ <tr>
+<td colspan="2">Optimisation tlr</td>
+ <td><select name="params" onchange="optimisationTotale()"><option /></select></td>
+    </tr>
+   <tr>
+    <td>Type of tree improvement</td>
+    <td colspan="3"><select name="search" onchange="searchChanged()"><option /></select></td>
+   </tr>
+   <tr>
+    <td>Number of random starting tree</td>
+    <td><select name="nRandStarts"><option /></select></td>
+    <td align="right">
+     yes<input type="radio" name="randstart" onclick="randomOptionChanged()" value="y" />
+    </td>
+    <td>
+     <input type="radio" name="randstart" onclick="randomOptionChanged()" value="n" checked="checked" />no
+    </td>
+   </tr>
+   <tr><!-- G val -->
+    <td>Random number generator</td>
+    <td><input name="rSeed" size="15" maxlength="15" value=""/></td>
+    <td align="right">
+      yes<input type="radio" name="rSeedOption" onclick="rSeedChanged()" value="y" />
+    </td>
+    <td>
+   <input type="radio" name="rSeedOption" onclick="rSeedChanged()" value="n" checked="checked" />no
+    </td>
+   </tr>
+   <tr>
+   <td colspan="2">Print site likelihood</td>
+   <td align="right">
+  active<input type="radio" name="printSiteLnl" onclick="printSiteLnlOptionChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="printSiteLnl" onclick="printSiteLnlOptionChanged()" value="n" checked="checked" />inactive
+   </td>
+  </tr>
+   <tr>
+   <td colspan="2">Print Trace</td>
+   <td align="right">
+  active<input type="radio" name="printTrace" onclick="printTraceOptionChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="printTrace" onclick="printTraceOptionChanged()" value="n" checked="checked" />inactive
+   </td>
+  </tr>
+  <tr>
+  <td colspan="2">Json Trace (JSON FORMAT)</td>
+  <td align="right">
+ active<input type="radio" name="jsonTrace" onclick="jsonTraceOptionChanged()" value="y" />
+  </td>
+  <td>
+ <input type="radio" name="jsonTrace" onclick="jsonTraceOptionChanged()" value="n" checked="checked" />inactive
+  </td>
+ </tr>
+   <tr>
+    <td >The ID string </td>
+    <td>
+      <input name="idString" type = "text" size="15" maxlength="15" value= " " />
+    </td>
+    <td>
+     yes<input type="radio" name="runId" onclick="runIdChange()" value="y " a/></td>
+     <td><input type="radio" name="runId" onclick="runIdChange()" value="n" checked="checked" />no
+    </td>
+   </tr>
+   <tr>
+   <td colspan="2">No memory check option</td>
+   <td align="right">
+  active<input type="radio" name="noMemoryCheck" onclick="noMemoryCheckOptionChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="noMemoryCheck" onclick="noMemoryCheckOptionChanged()" value="n" checked="checked" />inactive
+   </td>
+  </tr>
+   <tr>
+   <td colspan="2">No aliasing</td>
+   <td align="right">
+  active<input type="radio" name="noColalias" onclick="noColaliasOptionChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="noColalias" onclick="noColaliasOptionChanged()" value="n" checked="checked" />inactive
+   </td>
+  </tr>
+   <tr>
+   <td colspan="2">Quiet mode</td>
+   <td align="right">
+  active<input type="radio" name="quietMode" onclick="quietModeChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="quietMode" onclick="quietModeChanged()" value="n" checked="checked" />inactive
+   </td>
+  </tr>
+   <tr>
+   <td colspan="2">Ancestral sequences</td>
+   <td align="right">
+  active<input type="radio" name="ancestralCalculate" onclick="ancestralCalculateChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="ancestralCalculate" onclick="ancestralCalculateChanged()" value="n" checked="checked" />inactive
+   </td>
+  </tr>
+   <tr>
+   <td colspan="2">Leave duplicate sequences</td>
+   <td align="right">
+    yes<input type="radio" name="leaveDuplicates" onclick="leaveDuplicatesChanged()" value="y" />
+   </td>
+   <td>
+  <input type="radio" name="leaveDuplicates" onclick="leaveDuplicatesChanged()" value="n" checked="checked" />no
+   </td>
+  </tr>
+  <tr>
+   <td>Bootstrap</td>
+   <td><input name="NbBtsDataSets" size="15" maxlength="15" value ="" /></td>
+   <td>
+    yes<input type="radio" name="bootstrapOption" onclick="bootOptionChanged()" value="y" a/></td>
+    <td><input type="radio" name="bootstrapOption" onclick="bootOptionChanged()" value="n" checked="checked" />no
+   </td>
+  </tr>
+  <tr>
+   <td width="30%">Fast likelihood-based method</td>
+   <td>
+    <select name="TestValue"><option /></select>
+   </td>
+   <td >
+    yes<input type="radio" name="OptaLRTOption" onclick="aLRTOptionChanged()" value="y" /></td>
+    <td><input type="radio" name="OptaLRTOption" onclick="aLRTOptionChanged()" value="n" checked="checked" />no
+   </td>
+  </tr>
+  </table>
+  <br />
+  <br />
+   <div align="center">
+   <input class="button" type="submit" value="Run" onclick="return validate()" style="width: 70px; height: 30px"  />
+   </div>
+   </form>
+   </body>
+</html>

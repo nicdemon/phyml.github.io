@@ -10,7 +10,7 @@ Two versions of the web interface were developped:
 ## PhyMl details
 [PhyML](http://www.atgc-montpellier.fr/phyml/) is a software developped and maintained by the French bioinformatics institute.
 
-PhyMl's repo i hosted on [Github](https://github.com/stephaneguindon/phyml).
+PhyML's repo hosted on [Github](https://github.com/stephaneguindon/phyml).
 
 PhyML's article citation:
 ```
